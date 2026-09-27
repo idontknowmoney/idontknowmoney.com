@@ -1,0 +1,20 @@
+name: REUSE Compliance
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+concurrency:
+  group: reuse-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  reuse:
+    name: Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: fsfe/reuse-action@v6
