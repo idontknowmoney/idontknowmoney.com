@@ -60,4 +60,14 @@ Check out [our documentation](https://docs.astro.build) or jump into our [Discor
 
 ## Credit
 
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/), via the [Astro blog template](https://github.com/withastro/astro/tree/main/examples/blog) (MIT, © 2021 Fred K. Schott).
+
+## License
+
+This project follows the [REUSE specification](https://reuse.software) — run `reuse lint` to verify compliance, and see `REUSE.toml` and `LICENSES/` for the full picture.
+
+- **Content** — posts and their assets in [`src/content/blog/`](src/content/blog/) — is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), © Alex Rodríguez.
+- **Everything else**, including code snippets within posts, is licensed under [MIT](LICENSE), © Alex Rodríguez.
+- A few third-party assets keep their original licenses, as recorded in `REUSE.toml`:
+  - The Atkinson Hyperlegible fonts (`src/assets/fonts/`) are © Braille Institute of America, Inc., under [OFL-1.1](LICENSES/OFL-1.1.txt).
+  - The placeholder images (`src/assets/blog-placeholder-*.jpg`) and favicon (`public/favicon.ico`, `public/favicon.svg`) come from the Astro blog template and are © Fred K. Schott, under MIT.
