@@ -1,0 +1,75 @@
+---
+import {
+	epLabel,
+	epNumber,
+	episodeHref,
+	formatDate,
+	readingTime,
+	type Episode,
+} from '../lib/content';
+import Tag from './Tag.astro';
+
+interface Props {
+	episode: Episode;
+	variant?: 'featured' | 'grid' | 'row';
+}
+
+const { episode, variant = 'grid' } = Astro.props;
+const { title, description, pubDate, topic, minutes } = episode.data;
+const mins = minutes ?? readingTime(episode.body);
+const date = formatDate(pubDate);
+const href = episodeHref(episode);
+---
+
+{variant === 'featured' ? (
+	<a class="ik-post ik-post--featured" href={href}>
+		<div class="ik-post__num" aria-hidden="true">
+			{epNumber(episode.data.episode)}
+		</div>
+		<div class="ik-post__body">
+			<div class="ik-post__meta">
+				<Tag kind="accent">Latest</Tag>
+				<span class="ik-post__ep">{epLabel(episode.data.episode)}</span>
+				<Tag>{topic}</Tag>
+			</div>
+			<h3 class="ik-post__title">{title}</h3>
+			<p class="ik-post__excerpt">{description}</p>
+			<div class="ik-post__foot">
+				<span class="ik-meta">{date}</span>
+				<span class="ik-meta">{mins} min read</span>
+				<span class="ik-post__arrow">Read →</span>
+			</div>
+		</div>
+	</a>
+) : variant === 'row' ? (
+	<a class="ik-post ik-post--row" href={href} data-filter-item data-filter-value={topic}>
+		<div class="ik-post__numsm">{epNumber(episode.data.episode)}</div>
+		<div class="ik-post__main">
+			<div class="ik-post__meta">
+				<span class="ik-post__ep">{epLabel(episode.data.episode)}</span>
+				<Tag>{topic}</Tag>
+			</div>
+			<h3 class="ik-post__title">{title}</h3>
+			<p class="ik-post__excerpt">{description}</p>
+		</div>
+		<div class="ik-post__side">
+			<span class="ik-meta">{date}</span>
+			<span class="ik-meta">{mins} min</span>
+			<span class="ik-post__arrow">→</span>
+		</div>
+	</a>
+) : (
+	<a class="ik-post" href={href}>
+		<div class="ik-post__meta">
+			<span class="ik-post__ep">{epLabel(episode.data.episode)}</span>
+			<Tag>{topic}</Tag>
+		</div>
+		<h3 class="ik-post__title">{title}</h3>
+		<p class="ik-post__excerpt">{description}</p>
+		<div class="ik-post__foot">
+			<span class="ik-meta">{date}</span>
+			<span class="ik-meta">{mins} min</span>
+			<span class="ik-post__arrow">→</span>
+		</div>
+	</a>
+)}

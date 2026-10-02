@@ -1,73 +1,49 @@
-# Astro Starter Kit: Blog
+# I Don't Know Money (Yet)
 
-```sh
-pnpm create astro@latest -- --template blog
-```
+A minimalist developer blog about learning finance by building things, built with [Astro](https://astro.build) and styled with the _I Don't Know Money (Yet)_ design system (a white façade, mounted panels, one teal accent).
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Three tabs: **Home**, **Posts** (every episode, filterable by topic) and **Social** (X and LinkedIn posts that link out).
 
-Features:
-
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and Open Graph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
+## Project structure
 
 ```text
-├── public/
+├── public/                 favicons, og-image
+├── templates/              episode.md, social.md (copy into src/content/)
 ├── src/
-│   ├── assets/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
+│   ├── components/         SiteHeader, PostCard, SocialCard, FilterBar, ...
+│   ├── content/
+│   │   ├── blog/           episodes (Markdown/MDX), CC BY 4.0
+│   │   └── social/         X and LinkedIn posts (Markdown, body = post text)
+│   ├── layouts/            BaseLayout, EpisodeLayout
+│   ├── lib/content.ts      collection helpers, date and episode formatting
+│   ├── pages/              /, /posts, /posts/<episode>, /social, /rss.xml
+│   └── styles/             tokens.css, ik.css (design system), global.css
+└── astro.config.mjs        fonts (Instrument Sans, JetBrains Mono)
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+### Writing content
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+- An episode is `src/content/blog/ep-NN-slug.md` with `title`, `description`, `pubDate`, `episode`, `season`, `topic` and optional `code`, `takeaway`, `minutes`, `draft`.
+- A social post is `src/content/social/<date>-<platform>-<slug>.md` with `platform`, `url`, `date` and optionally `episode`; the body is the post text, exactly as published.
+- Start from the templates in [`templates/`](templates/): `episode.md` and `social.md` (each field is explained in comments). They live outside `src/content/` so they are never published.
+- Entries with `draft: true` show in `pnpm dev` and are left out of production builds. The seed content is all drafts: replace it with real episodes.
 
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
+## Commands
 
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                | Action                                           |
-| :--------------------- | :----------------------------------------------- |
-| `pnpm install`         | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
-
-## Credit
-
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/), via the [Astro blog template](https://github.com/withastro/astro/tree/main/examples/blog) (MIT, © 2021 Fred K. Schott).
+| Command        | Action                                      |
+| :------------- | :------------------------------------------ |
+| `pnpm install` | Installs dependencies                       |
+| `pnpm dev`     | Starts local dev server at `localhost:4321` |
+| `pnpm build`   | Builds the production site to `./dist/`     |
+| `pnpm preview` | Previews the build locally                  |
+| `pnpm check`   | Type-checks Astro files                     |
+| `pnpm format`  | Formats with Prettier                       |
 
 ## License
 
 This project follows the [REUSE specification](https://reuse.software) — run `reuse lint` to verify compliance, and see `REUSE.toml` and `LICENSES/` for the full picture.
 
-- **Content** — posts and their assets in [`src/content/blog/`](src/content/blog/) — is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), © Alex Rodríguez.
-- **Everything else**, including code snippets within posts, is licensed under [MIT](LICENSE), © Alex Rodríguez.
-- A few third-party assets keep their original licenses, as recorded in `REUSE.toml`:
-  - The Atkinson Hyperlegible fonts (`src/assets/fonts/`) are © Braille Institute of America, Inc., under [OFL-1.1](LICENSES/OFL-1.1.txt).
-  - The placeholder images (`src/assets/blog-placeholder-*.jpg`) and favicon (`public/favicon.ico`, `public/favicon.svg`) come from the Astro blog template and are © Fred K. Schott, under MIT.
+- **Content** — posts and their assets in [`src/content/blog/`](src/content/blog/) — is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), © Àlex Rodríguez.
+- **Everything else**, including code snippets within posts, is licensed under [MIT](LICENSE), © Àlex Rodríguez.
+
+Instrument Sans and JetBrains Mono are fetched from Google Fonts at build time and self-hosted. Both are licensed under the SIL Open Font License 1.1 and are not stored in this repository.

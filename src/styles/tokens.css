@@ -1,0 +1,65 @@
+/* Design tokens for "I Don't Know Money (Yet)". Source: the design system's tokens.json. */
+
+:root,
+[data-theme='light'] {
+	color-scheme: light;
+	--facade-panel: #ffffff;
+	--facade-panel-2: #f9f9f7;
+	--facade-panel-3: #f3f2ef;
+	--facade-joint: #e3e1dc;
+	--surface: #ffffff;
+	--surface-sunken: #f5f4f1;
+	--line: #e0ded9;
+	--line-strong: #8e8b84;
+	--ink: #1b1b19;
+	--ink-muted: #5d5b56;
+	--accent: #0d6e6e;
+	--accent-soft: #ddf0ef;
+	--on-accent: #ffffff;
+	--linkedin: #0a66c2;
+	--link: var(--accent);
+	--focus: var(--accent);
+	--shadow-panel: 0 1px 2px rgba(27, 27, 25, 0.05);
+	--shadow-lift: 0 2px 4px rgba(27, 27, 25, 0.06), 0 12px 32px rgba(27, 27, 25, 0.08);
+}
+
+[data-theme='dark'] {
+	color-scheme: dark;
+	--facade-panel: #151618;
+	--facade-panel-2: #18191b;
+	--facade-panel-3: #1c1d20;
+	--facade-joint: #0b0c0d;
+	--surface: #1f2023;
+	--surface-sunken: #18191c;
+	--line: #313338;
+	--line-strong: #6f727a;
+	--ink: #ecebe8;
+	--ink-muted: #a6a49e;
+	--accent: #4fd1c5;
+	--accent-soft: #0b2827;
+	--on-accent: #151618;
+	--linkedin: #71b7fb;
+	--shadow-panel: 0 1px 2px rgba(0, 0, 0, 0.45);
+	--shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.5), 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+:root {
+	--space-4: 4px;
+	--space-8: 8px;
+	--space-12: 12px;
+	--space-16: 16px;
+	--space-24: 24px;
+	--space-32: 32px;
+	--space-48: 48px;
+	--space-64: 64px;
+	--space-96: 96px;
+
+	--radius-0: 0px;
+	--radius-2: 2px;
+	--radius-full: 999px;
+
+	--container: 1120px;
+	--measure: 680px;
+	--header-height: 64px;
+	--joint: 2px;
+}

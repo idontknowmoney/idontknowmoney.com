@@ -1,0 +1,38 @@
+---
+import { AUTHOR, SOCIAL } from '../consts';
+import Wordmark from './Wordmark.astro';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="ik-footer">
+	<div class="ik-container ik-footer__inner">
+		<Wordmark />
+		<span>Educational content, not investment advice.</span>
+		<nav class="ik-footer__links" aria-label="Elsewhere">
+			<a href="/rss.xml">RSS</a>
+			<a href={SOCIAL.github} target="_blank" rel="noopener">
+				GitHub ↗
+			</a>
+			<a href={SOCIAL.x.url} target="_blank" rel="noopener">
+				X ↗
+			</a>
+			<a href={SOCIAL.linkedin.url} target="_blank" rel="noopener">
+				LinkedIn ↗
+			</a>
+		</nav>
+	</div>
+	<div class="ik-container ik-footer__inner" style="margin-top: var(--space-16)">
+		<span>
+			&copy; {year} {AUTHOR}. Content under{' '}
+			<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">
+				CC BY 4.0
+			</a>{' '}
+			· code under{' '}
+			<a href={`${SOCIAL.github}/blob/main/LICENSE`} target="_blank" rel="noopener">
+				MIT
+			</a>
+			.
+		</span>
+	</div>
+</footer>

@@ -1,0 +1,51 @@
+---
+import { getEpisodes, getSocialPosts } from '../lib/content';
+import Wordmark from './Wordmark.astro';
+
+const path = Astro.url.pathname;
+const [episodes, social] = await Promise.all([getEpisodes(), getSocialPosts()]);
+
+const tabs = [
+	{ label: 'Home', href: '/', active: path === '/', count: undefined },
+	{ label: 'Posts', href: '/posts/', active: path.startsWith('/posts'), count: episodes.length },
+	{ label: 'Social', href: '/social/', active: path.startsWith('/social'), count: social.length },
+];
+---
+
+<header class="ik-header">
+	<div class="ik-container ik-header__inner">
+		<Wordmark />
+		<nav class="ik-tabs" aria-label="Sections">
+			{tabs.map((tab) => (
+				<a class="ik-tab" href={tab.href} aria-current={tab.active ? 'page' : undefined}>
+					{tab.label}
+					{tab.count ? <span class="ik-tab__count">{tab.count}</span> : null}
+				</a>
+			))}
+		</nav>
+		<button class="ik-iconbtn" type="button" aria-label="Toggle dark mode" data-theme-toggle>
+			<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+				<circle
+					cx="8"
+					cy="8"
+					r="6.25"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="1.5"
+				></circle>
+				<path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"></path>
+			</svg>
+		</button>
+	</div>
+</header>
+
+<script>
+	document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
+		const root = document.documentElement;
+		const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+		root.setAttribute('data-theme', next);
+		try {
+			localStorage.setItem('theme', next);
+		} catch {}
+	});
+</script>

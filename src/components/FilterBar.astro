@@ -1,0 +1,58 @@
+---
+interface Props {
+	/** Query-string key that reflects the active chip, e.g. "topic". */
+	param: string;
+	/** Chips after "All". `value` is matched against each item's `data-filter-value`. */
+	options: { value: string; count: number }[];
+	total: number;
+	label: string;
+}
+
+const { param, options, total, label } = Astro.props;
+---
+
+<div class="ik-filter" role="group" aria-label={label} data-filter-bar data-param={param}>
+	<button class="ik-chip" type="button" aria-pressed="true" data-value="">
+		All <span class="ik-chip__n">{total}</span>
+	</button>
+	{options.map((o) => (
+		<button class="ik-chip" type="button" aria-pressed="false" data-value={o.value}>
+			{o.value} <span class="ik-chip__n">{o.count}</span>
+		</button>
+	))}
+</div>
+
+<script>
+	const bar = document.querySelector<HTMLElement>('[data-filter-bar]');
+	if (bar) {
+		const param = bar.dataset.param!;
+		const chips = [...bar.querySelectorAll<HTMLButtonElement>('.ik-chip')];
+		const items = [...document.querySelectorAll<HTMLElement>('[data-filter-item]')];
+		const groups = [...document.querySelectorAll<HTMLElement>('[data-filter-group]')];
+
+		const apply = (value: string) => {
+			chips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.value === value)));
+			items.forEach((i) => (i.hidden = value !== '' && i.dataset.filterValue !== value));
+			groups.forEach((g) => (g.hidden = !g.querySelector('[data-filter-item]:not([hidden])')));
+			document.dispatchEvent(new CustomEvent('filterchange'));
+		};
+
+		const read = () => {
+			const v = new URLSearchParams(location.search).get(param)?.toLowerCase();
+			return chips.find((c) => v && c.dataset.value?.toLowerCase() === v)?.dataset.value ?? '';
+		};
+
+		chips.forEach((chip) =>
+			chip.addEventListener('click', () => {
+				const value = chip.dataset.value ?? '';
+				const url = new URL(location.href);
+				if (value) url.searchParams.set(param, value.toLowerCase());
+				else url.searchParams.delete(param);
+				history.replaceState(null, '', url);
+				apply(value);
+			}),
+		);
+
+		apply(read());
+	}
+</script>
