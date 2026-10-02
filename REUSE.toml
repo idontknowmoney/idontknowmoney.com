@@ -2,10 +2,10 @@ version = 1
 
 [[annotations]]
 path = "**"
-SPDX-FileCopyrightText = "2026 Alex Rodríguez"
+SPDX-FileCopyrightText = "2026 Àlex Rodríguez"
 SPDX-License-Identifier = "MIT"
 
 [[annotations]]
 path = "src/content/blog/**"
-SPDX-FileCopyrightText = "2026 Alex Rodríguez"
+SPDX-FileCopyrightText = "2026 Àlex Rodríguez"
 SPDX-License-Identifier = "CC-BY-4.0"

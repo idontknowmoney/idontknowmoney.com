@@ -43,7 +43,7 @@ Three tabs: **Home**, **Posts** (every episode, filterable by topic) and **Socia
 
 This project follows the [REUSE specification](https://reuse.software) — run `reuse lint` to verify compliance, and see `REUSE.toml` and `LICENSES/` for the full picture.
 
-- **Content** — posts and their assets in [`src/content/blog/`](src/content/blog/) — is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), © Alex Rodríguez.
-- **Everything else**, including code snippets within posts, is licensed under [MIT](LICENSE), © Alex Rodríguez.
+- **Content** — posts and their assets in [`src/content/blog/`](src/content/blog/) — is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), © Àlex Rodríguez.
+- **Everything else**, including code snippets within posts, is licensed under [MIT](LICENSE), © Àlex Rodríguez.
 
 Fonts are loaded from Google Fonts at build time and self-hosted (Instrument Sans and JetBrains Mono, both [OFL-1.1](LICENSES/OFL-1.1.txt)).

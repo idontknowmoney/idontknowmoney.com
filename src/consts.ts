@@ -1,7 +1,7 @@
 export const SITE_TITLE = "I Don't Know Money (Yet)";
 export const SITE_DESCRIPTION =
 	'A data scientist learning finance by building it. Every episode is a model, a mistake, and what the data said.';
-export const AUTHOR = 'Alex Rodríguez';
+export const AUTHOR = 'Àlex Rodríguez';
 export const AUTHOR_INITIALS = 'AR';
 
 export const SOCIAL = {
