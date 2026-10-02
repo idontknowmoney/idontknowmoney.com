@@ -1,0 +1,17 @@
+---
+interface Props {
+	kind?: 'topic' | 'accent' | 'x' | 'linkedin';
+}
+
+const { kind = 'topic' } = Astro.props;
+const modifier = {
+	topic: '',
+	accent: ' ik-tag--accent',
+	x: ' ik-tag--x',
+	linkedin: ' ik-tag--linkedin',
+}[kind];
+---
+
+<span class={`ik-tag${modifier}`}>
+	<slot />
+</span>

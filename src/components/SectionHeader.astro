@@ -1,0 +1,20 @@
+---
+interface Props {
+	title: string;
+	href?: string;
+	linkLabel?: string;
+	style?: string;
+}
+
+const { title, href, linkLabel, style } = Astro.props;
+---
+
+<div class="ik-section-head" style={style}>
+	<h2>{title}</h2>
+	<span class="ik-section-head__rule"></span>
+	{href && (
+		<a class="ik-btn ik-btn--link" href={href}>
+			{linkLabel} →
+		</a>
+	)}
+</div>

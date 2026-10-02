@@ -1,0 +1,49 @@
+---
+import FilterBar from '../components/FilterBar.astro';
+import SocialCard from '../components/SocialCard.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getSocialPosts } from '../lib/content';
+
+const posts = await getSocialPosts();
+const count = (p: 'x' | 'linkedin') => posts.filter((post) => post.data.platform === p).length;
+const platforms = [
+	{ value: 'X', count: count('x') },
+	{ value: 'LinkedIn', count: count('linkedin') },
+].filter((p) => p.count > 0);
+---
+
+<BaseLayout
+	title="Social · I Don't Know Money (Yet)"
+	description="Short notes and threads between episodes, from X and LinkedIn."
+>
+	<div class="ik-container">
+		<section class="ik-pagehead">
+			<span class="ik-meta">X + LinkedIn</span>
+			<h1>Social</h1>
+			<p>Short notes and threads between episodes. Click any card to open the original post.</p>
+			{posts.length > 0 && (
+				<FilterBar
+					param="platform"
+					label="Filter by platform"
+					options={platforms}
+					total={posts.length}
+				/>
+			)}
+		</section>
+
+		<section class="ik-section">
+			{posts.length > 0 ? (
+				<div class="ik-masonry">
+					{posts.map((post) => (
+						<SocialCard {post} filterable />
+					))}
+				</div>
+			) : (
+				<div class="ik-empty">
+					<strong>Nothing here yet</strong>
+					Posts from X and LinkedIn will show up here.
+				</div>
+			)}
+		</section>
+	</div>
+</BaseLayout>

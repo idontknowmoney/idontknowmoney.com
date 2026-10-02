@@ -9,31 +9,35 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://example.com',
+	site: 'https://idontknowmoney.com',
 	integrations: [mdx(), sitemap(), react()],
+
+	// Code colors come from CSS variables (see global.css), so they follow the design system
+	// and switch with the light/dark theme.
+	markdown: { shikiConfig: { theme: 'css-variables' } },
+
+	redirects: {
+		'/blog': '/posts',
+	},
 
 	fonts: [
 		{
-			provider: fontProviders.local(),
-			name: 'Atkinson',
-			cssVariable: '--font-atkinson',
-			fallbacks: ['sans-serif'],
-			options: {
-				variants: [
-					{
-						src: ['./src/assets/fonts/atkinson-regular.woff'],
-						weight: 400,
-						style: 'normal',
-						display: 'swap',
-					},
-					{
-						src: ['./src/assets/fonts/atkinson-bold.woff'],
-						weight: 700,
-						style: 'normal',
-						display: 'swap',
-					},
-				],
-			},
+			provider: fontProviders.google(),
+			name: 'Instrument Sans',
+			cssVariable: '--font-sans',
+			weights: [400, 500, 600, 700],
+			styles: ['normal'],
+			subsets: ['latin'],
+			fallbacks: ['ui-sans-serif', 'system-ui', 'sans-serif'],
+		},
+		{
+			provider: fontProviders.google(),
+			name: 'JetBrains Mono',
+			cssVariable: '--font-mono',
+			weights: [400, 500],
+			styles: ['normal'],
+			subsets: ['latin'],
+			fallbacks: ['ui-monospace', 'monospace'],
 		},
 	],
 

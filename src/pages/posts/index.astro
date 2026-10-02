@@ -1,0 +1,175 @@
+---
+import FilterBar from '../../components/FilterBar.astro';
+import PostCard from '../../components/PostCard.astro';
+import { SEASONS, TOPICS } from '../../consts';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getEpisodes } from '../../lib/content';
+
+const episodes = await getEpisodes();
+
+const topics = TOPICS.map((value) => ({
+	value,
+	count: episodes.filter((e) => e.data.topic === value).length,
+})).filter((t) => t.count > 0);
+
+const seasons = [...new Set(episodes.map((e) => e.data.season))].sort((a, b) => b - a);
+const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
+---
+
+<BaseLayout
+	title="Posts · I Don't Know Money (Yet)"
+	description="Every episode in order. Each one documents something I tried to learn by building it."
+>
+	<div class="ik-container">
+		<section class="ik-pagehead">
+			<span class="ik-meta">
+				{plural(episodes.length, 'episode')} · {plural(seasons.length, 'season')}
+			</span>
+			<h1>Posts</h1>
+			<p>
+				Every episode in order. Each one documents something I tried to learn by building it, code
+				included.
+			</p>
+			{episodes.length > 0 && (
+				<FilterBar param="topic" label="Filter by topic" options={topics} total={episodes.length} />
+			)}
+		</section>
+
+		<section class="ik-section">
+			{episodes.length === 0 && (
+				<div class="ik-empty">
+					<strong>No episodes yet</strong>
+					The first one is on its way.
+				</div>
+			)}
+			{episodes.length > 0 && (
+				<div class="ik-seasonbar">
+					<div class="ik-seasontabs" role="tablist" aria-label="Seasons" data-season-tabs>
+						{seasons.map((season, i) => (
+							<button
+								class="ik-seasontab"
+								type="button"
+								role="tab"
+								id={`season-tab-${season}`}
+								aria-controls={`season-panel-${season}`}
+								aria-selected={i === 0 ? 'true' : 'false'}
+								tabindex={i === 0 ? 0 : -1}
+								data-season={season}
+							>
+								<span class="ik-meta">Season {season}</span>
+								<span class="ik-seasontab__name">{SEASONS[season]}</span>
+							</button>
+						))}
+					</div>
+					<button
+						class="ik-btn ik-btn--sort"
+						type="button"
+						data-sort-toggle
+						aria-label="Sort episodes: highest number first. Click to reverse."
+					>
+						Episode no.{' '}
+						<span aria-hidden="true" data-sort-arrow>
+							↓
+						</span>
+					</button>
+				</div>
+			)}
+			{seasons.map((season, i) => (
+				<div
+					role="tabpanel"
+					id={`season-panel-${season}`}
+					aria-labelledby={`season-tab-${season}`}
+					hidden={i !== 0}
+					data-season-panel={season}
+				>
+					<div class="ik-list">
+						{episodes
+							.filter((e) => e.data.season === season)
+							.map((e) => (
+								<PostCard episode={e} variant="row" />
+							))}
+					</div>
+					<div class="ik-empty" data-season-empty hidden>
+						<strong>No episodes match</strong>
+						Nothing in this season for that topic. Try another topic or season.
+					</div>
+				</div>
+			))}
+		</section>
+	</div>
+</BaseLayout>
+
+<script>
+	const tablist = document.querySelector<HTMLElement>('[data-season-tabs]');
+	if (tablist) {
+		const tabs = [...tablist.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+		const panels = [...document.querySelectorAll<HTMLElement>('[data-season-panel]')];
+
+		const syncEmpty = () => {
+			panels.forEach((panel) => {
+				const hasVisible = panel.querySelector('[data-filter-item]:not([hidden])');
+				panel.querySelector<HTMLElement>('[data-season-empty]')!.hidden = !!hasVisible;
+			});
+		};
+
+		const select = (season: string, focus = false) => {
+			tabs.forEach((tab) => {
+				const on = tab.dataset.season === season;
+				tab.setAttribute('aria-selected', String(on));
+				tab.tabIndex = on ? 0 : -1;
+				if (on && focus) tab.focus();
+			});
+			panels.forEach((panel) => (panel.hidden = panel.dataset.seasonPanel !== season));
+			syncEmpty();
+		};
+
+		const fromUrl = new URLSearchParams(location.search).get('season');
+		if (fromUrl && tabs.some((t) => t.dataset.season === fromUrl)) select(fromUrl);
+
+		tabs.forEach((tab, i) => {
+			tab.addEventListener('click', () => {
+				const url = new URL(location.href);
+				url.searchParams.set('season', tab.dataset.season!);
+				history.replaceState(null, '', url);
+				select(tab.dataset.season!);
+			});
+			tab.addEventListener('keydown', (e) => {
+				const step = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+				if (!step) return;
+				e.preventDefault();
+				const next = tabs[(i + step + tabs.length) % tabs.length];
+				next.click();
+				next.focus();
+			});
+		});
+
+		document.addEventListener('filterchange', syncEmpty);
+
+		// Sort by episode number. The page renders highest first; reversing flips it.
+		const sortBtn = document.querySelector<HTMLButtonElement>('[data-sort-toggle]')!;
+		const arrow = sortBtn.querySelector('[data-sort-arrow]')!;
+		let ascending = false;
+		const setSort = (asc: boolean) => {
+			if (asc !== ascending) {
+				document.querySelectorAll<HTMLElement>('.ik-list').forEach((list) => {
+					list.append(...[...list.children].reverse());
+				});
+				ascending = asc;
+			}
+			arrow.textContent = asc ? '↑' : '↓';
+			sortBtn.setAttribute(
+				'aria-label',
+				`Sort episodes: ${asc ? 'lowest' : 'highest'} number first. Click to reverse.`,
+			);
+		};
+		sortBtn.addEventListener('click', () => {
+			setSort(!ascending);
+			const url = new URL(location.href);
+			if (ascending) url.searchParams.set('sort', 'asc');
+			else url.searchParams.delete('sort');
+			history.replaceState(null, '', url);
+		});
+		if (new URLSearchParams(location.search).get('sort') === 'asc') setSort(true);
+		syncEmpty();
+	}
+</script>
