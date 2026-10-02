@@ -46,4 +46,4 @@ This project follows the [REUSE specification](https://reuse.software) — run `
 - **Content** — posts and their assets in [`src/content/blog/`](src/content/blog/) — is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), © Àlex Rodríguez.
 - **Everything else**, including code snippets within posts, is licensed under [MIT](LICENSE), © Àlex Rodríguez.
 
-Fonts are loaded from Google Fonts at build time and self-hosted (Instrument Sans and JetBrains Mono, both [OFL-1.1](LICENSES/OFL-1.1.txt)).
+Instrument Sans and JetBrains Mono are fetched from Google Fonts at build time and self-hosted. Both are licensed under the SIL Open Font License 1.1 and are not stored in this repository.
