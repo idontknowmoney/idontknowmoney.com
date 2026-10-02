@@ -1,0 +1,24 @@
+---
+interface Props {
+	display?: boolean;
+	href?: string;
+}
+
+const { display = false, href } = Astro.props;
+---
+
+{display ? (
+	<span class="ik-wordmark ik-wordmark--display">
+		I Don't Know Money <span class="ik-wordmark__yet">(Yet)</span>
+	</span>
+) : (
+	<a class="ik-wordmark" href={href ?? '/'} aria-label="I Don't Know Money (Yet), home">
+		<span class="ik-wordmark__long">I Don't Know Money</span>
+		<span class="ik-wordmark__short" aria-hidden="true">
+			IDKM
+		</span>
+		<span class="ik-wordmark__yet" aria-hidden="true">
+			(Yet)
+		</span>
+	</a>
+)}

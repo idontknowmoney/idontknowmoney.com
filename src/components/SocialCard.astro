@@ -1,0 +1,50 @@
+---
+import { getEntry } from 'astro:content';
+import { AUTHOR, AUTHOR_INITIALS, SOCIAL } from '../consts';
+import { epLabel, formatDate, type SocialPost } from '../lib/content';
+import Tag from './Tag.astro';
+
+interface Props {
+	post: SocialPost;
+	filterable?: boolean;
+}
+
+const { post, filterable = false } = Astro.props;
+const { platform, url, date, episode } = post.data;
+const quoted = episode ? await getEntry(episode) : undefined;
+const isX = platform === 'x';
+const platformName = isX ? 'X' : 'LinkedIn';
+const filterAttrs = filterable
+	? { 'data-filter-item': true, 'data-filter-value': platformName }
+	: {};
+---
+
+<a
+	class:list={['ik-social', isX ? 'ik-social--x' : 'ik-social--linkedin']}
+	href={url}
+	target="_blank"
+	rel="noopener"
+	{...filterAttrs}
+>
+	<div class="ik-social__head">
+		<span class="ik-avatar" aria-hidden="true">
+			{AUTHOR_INITIALS}
+		</span>
+		<span class="ik-social__who">
+			<span class="ik-social__name">{AUTHOR}</span>
+			<span class="ik-social__handle">{SOCIAL[platform].handle}</span>
+		</span>
+		<Tag kind={platform}>{platformName}</Tag>
+	</div>
+	<p class="ik-social__text">{post.body?.trim()}</p>
+	{quoted && (
+		<div class="ik-social__quote">
+			<b>{epLabel(quoted.data.episode)}</b>
+			<span>{quoted.data.title}</span>
+		</div>
+	)}
+	<div class="ik-social__foot">
+		<span class="ik-meta">{formatDate(date, true)}</span>
+		<span class="ik-social__cta">View on {platformName} ↗</span>
+	</div>
+</a>

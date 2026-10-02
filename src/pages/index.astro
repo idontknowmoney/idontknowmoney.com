@@ -1,59 +1,85 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import PostCard from '../components/PostCard.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import SocialCard from '../components/SocialCard.astro';
+import Wordmark from '../components/Wordmark.astro';
+import { NOW_LEARNING, SITE_DESCRIPTION, SITE_TITLE, SOCIAL } from '../consts';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { episodeHref, getEpisodes, getSocialPosts } from '../lib/content';
+
+const episodes = await getEpisodes();
+const [latest, ...earlier] = episodes;
+const first = episodes.at(-1);
+const social = (await getSocialPosts()).slice(0, 2);
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This
-				template serves as a lightweight, minimally-styled starting point for anyone looking to
-				build a personal website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your{' '}
-				<code>astro.config.mjs</code> file. You can customize your setup with{' '}
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like
-				Tailwind, React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>
-					Edit this page in <code>src/pages/index.astro</code>
-				</li>
-				<li>
-					Edit the site header items in <code>src/components/Header.astro</code>
-				</li>
-				<li>
-					Add your name to the footer in <code>src/components/Footer.astro</code>
-				</li>
-				<li>
-					Check out the included blog posts in <code>src/content/blog/</code>
-				</li>
-				<li>
-					Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code>
-				</li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to{' '}
-				<a href="https://docs.astro.build/">read the docs</a> or{' '}
-				<a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out{' '}
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a> by{' '}
-				<a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
-		</main>
-		<Footer />
-	</body>
-</html>
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+	<div class="ik-container">
+		<section class="ik-hero">
+			<span class="ik-meta">A learning-in-public blog</span>
+			<h1 style="margin:16px 0 0;max-width:760px">
+				<Wordmark display />
+			</h1>
+			<p class="ik-hero__tag">{SITE_DESCRIPTION}</p>
+			<div class="ik-hero__actions">
+				{first && (
+					<a class="ik-btn ik-btn--primary" href={episodeHref(first)}>
+						Start at Episode {String(first.data.episode).padStart(2, '0')}
+					</a>
+				)}
+				<a class="ik-btn" href={SOCIAL.x.url} target="_blank" rel="noopener">
+					Follow on X ↗
+				</a>
+				<a class="ik-btn" href={SOCIAL.linkedin.url} target="_blank" rel="noopener">
+					Follow on <span class="ik-li">LinkedIn</span> ↗
+				</a>
+			</div>
+		</section>
+
+		<section class="ik-section">
+			<div class="ik-grid-home">
+				<div>
+					<SectionHeader title="Latest episode" />
+					{latest ? (
+						<PostCard episode={latest} variant="featured" />
+					) : (
+						<div class="ik-empty">
+							<strong>No episodes yet</strong>
+							The first one is on its way.
+						</div>
+					)}
+					{earlier.length > 0 && (
+						<>
+							<SectionHeader
+								title="Earlier episodes"
+								href="/posts/"
+								linkLabel="All posts"
+								style="margin-top:48px"
+							/>
+							<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px">
+								{earlier.slice(0, 2).map((e) => (
+									<PostCard episode={e} />
+								))}
+							</div>
+						</>
+					)}
+				</div>
+				<div>
+					<SectionHeader title="From social" href="/social/" linkLabel="All" />
+					{social.length > 0 ? (
+						<div class="ik-stack">
+							{social.map((post) => (
+								<SocialCard {post} />
+							))}
+						</div>
+					) : (
+						<div class="ik-empty">
+							<strong>Nothing here yet</strong>
+							Posts from X and LinkedIn will show up here.
+						</div>
+					)}
+				</div>
+			</div>
+		</section>
+	</div>
+</BaseLayout>
