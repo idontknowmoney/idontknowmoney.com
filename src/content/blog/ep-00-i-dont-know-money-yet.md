@@ -6,7 +6,7 @@ episode: 0
 season: 1
 topic: Meta
 minutes: 1
-draft: true
+draft: false
 ---
 
 I'm a data scientist and I don't know money, and I think that's a problem. But I'm super lazy, and I need some motivation to learn it. So I'm learning it the only way I know how: by writing code and building models, while forcing myself to share everything I learn with all of you.
