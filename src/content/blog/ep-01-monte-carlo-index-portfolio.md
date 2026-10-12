@@ -7,7 +7,7 @@ season: 1
 topic: Portfolio
 code: https://github.com/idontknowmoney/portfolio-lab
 minutes: 10
-draft: true
+draft: false
 ---
 
 "Invest your money!", "Invest in the S&P 500!", "Don't leave your money sitting in cash!", ... You've probably heard this kind of advice before on social media or from friends. Ok, but why? What are the numbers behind these statements? If I start putting money into a portfolio, I want to know how much risk I'm taking and how much I can realistically expect to get back. So before learning anything else about investing, I decided to simulate a simple portfolio and see what the data says.
