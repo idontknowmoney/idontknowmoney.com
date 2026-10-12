@@ -1,5 +1,5 @@
 ---
-title: 'Episode title'
+title: 'I simulated 10,000 futures of my index fund portfolio'
 description: 'What I tried, and what the data said.'
 pubDate: 2026-01-01
 episode: 1
