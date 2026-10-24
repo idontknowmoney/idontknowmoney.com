@@ -820,6 +820,53 @@
 	border-left: 2px solid var(--line-strong);
 	color: var(--ink-muted);
 }
+.ik-prose blockquote > :last-child {
+	margin-bottom: 0;
+}
+
+/* Tailwind's reset removes list markers; bring them back inside posts. */
+.ik-prose ul {
+	list-style: disc;
+}
+.ik-prose ol {
+	list-style: decimal;
+}
+.ik-prose li::marker {
+	color: var(--ink-muted);
+}
+
+/* Tables: wide ones scroll sideways on small screens instead of breaking the layout. */
+.ik-prose table {
+	display: block;
+	max-width: 100%;
+	overflow-x: auto;
+	margin: 0 0 var(--space-32);
+	border-collapse: collapse;
+	font-size: 15px;
+	line-height: 22px;
+	font-variant-numeric: tabular-nums;
+}
+.ik-prose th,
+.ik-prose td {
+	padding: var(--space-8) var(--space-16) var(--space-8) 0;
+	border-bottom: 1px solid var(--line);
+	text-align: left;
+	vertical-align: top;
+}
+.ik-prose th:last-child,
+.ik-prose td:last-child {
+	padding-right: 0;
+}
+.ik-prose th {
+	font-weight: 600;
+	vertical-align: bottom;
+	border-bottom-color: var(--line-strong);
+}
+/* Tables with many columns get a minimum column width, so on phones they scroll
+   sideways instead of squeezing every cell into a narrow word column. */
+.ik-prose table:has(th:nth-child(5)) :is(th, td) {
+	min-width: 7rem;
+}
 .ik-sr-only {
 	position: absolute;
 	width: 1px;
