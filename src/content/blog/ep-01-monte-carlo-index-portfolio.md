@@ -23,15 +23,15 @@ Before getting to any results, here's what I simulated and how the simulation wo
 
 Since I wanted to be able to alternate between different portfolios to experiment, I built the tool as a Jupyter notebook which picks up the portfolio configuration from a TOML file. The configuration includes the asset allocation, monthly contribution, and simulation length, etc. To keep it simple, I use a portfolio of only three ETFs:
 
-| Fund | What it holds | ISIN | Ticker | Share of each contribution |
-| --- | --- | --- | --- | --- |
-| iShares Core MSCI World UCITS ETF (Acc) | Large and mid caps across 23 developed countries | IE00B4L5Y983 | EUNL.DE | 70% |
-| iShares Core MSCI EM IMI UCITS ETF (Acc) | Large, mid and small caps across emerging markets | IE00BKM4GZ66 | IS3N.DE | 20% |
-| iShares Core MSCI Europe UCITS ETF (Acc) | Large and mid caps across developed European countries | IE00B4K48X80 | EUNK.DE | 10% |
+| Fund                                     | What it holds                                          | ISIN         | Ticker  | Share of each contribution |
+| ---------------------------------------- | ------------------------------------------------------ | ------------ | ------- | -------------------------- |
+| iShares Core MSCI World UCITS ETF (Acc)  | Large and mid caps across 23 developed countries       | IE00B4L5Y983 | EUNL.DE | 70%                        |
+| iShares Core MSCI EM IMI UCITS ETF (Acc) | Large, mid and small caps across emerging markets      | IE00BKM4GZ66 | IS3N.DE | 20%                        |
+| iShares Core MSCI Europe UCITS ETF (Acc) | Large and mid caps across developed European countries | IE00B4K48X80 | EUNK.DE | 10%                        |
 
 > **What's an ETF?**
 >
-> An ETF (exchange-traded fund) is a basket of many companies' shares that you buy as a single product on a stock exchange, just like you'd buy one share. An *index* ETF doesn't try to pick winners: it simply copies an index, a list of companies chosen by fixed rules. The MSCI World, for example, holds over a thousand large and mid-sized companies from developed countries. So one purchase spreads your money across all of them.
+> An ETF (exchange-traded fund) is a basket of many companies' shares that you buy as a single product on a stock exchange, just like you'd buy one share. An _index_ ETF doesn't try to pick winners: it simply copies an index, a list of companies chosen by fixed rules. The MSCI World, for example, holds over a thousand large and mid-sized companies from developed countries. So one purchase spreads your money across all of them.
 >
 > A few terms you'll see in the table:
 >
@@ -40,12 +40,12 @@ Since I wanted to be able to alternate between different portfolios to experimen
 
 The plan is the most boring one possible: let's say I start from 0 € and put 200 € into this portfolio every month for 10 years. I don't touch it, I don't rebalance it, I just let it sit there. I run the simulation 10,000 times to see what could happen.
 
-| Setting | Value |
-| --- | --- |
-| Monthly contribution | 200 € |
-| Horizon | 10 years |
-| Starting balance | 0 € |
-| Simulated futures | 10,000 |
+| Setting              | Value    |
+| -------------------- | -------- |
+| Monthly contribution | 200 €    |
+| Horizon              | 10 years |
+| Starting balance     | 0 €      |
+| Simulated futures    | 10,000   |
 
 ### How to simulate future that hasn't happened
 
@@ -53,7 +53,7 @@ I can't know what markets will do over the next ten years. But I do have about t
 
 The simplest version picks 120 random months (12 months * 10 years) and chains them together. The problem is that markets have memory, at least in the short term. Crashes don't come as one bad month surrounded by good ones; they come in streaks. For instance, in the 2008 crisis the market fell month after month. Should you shuffle single months, then those streaks disappear, and the future looks calmer than the past ever was.
 
-So instead I pick **blocks** of consecutive months. This is called a *block bootstrap*:
+So instead I pick **blocks** of consecutive months. This is called a _block bootstrap_:
 
 1. Pick a random starting month in the history and take it plus the next two: a 3-month block.
 2. Repeat until there are 120 months (40 blocks).
@@ -61,7 +61,7 @@ So instead I pick **blocks** of consecutive months. This is called a *block boot
 
 One of those futures might start with the spring of 2009, jump to the end of 2017, then land on the COVID crash of early 2020. Each block is a real stretch of market history; only the order is new.
 
-One more detail matters: each month is taken *for all three funds at once*. If I picked them separately, emerging markets could boom while the rest of the world crashes in the same simulated month. Keeping whole months together keeps the funds moving together the way they really do.
+One more detail matters: each month is taken _for all three funds at once_. If I picked them separately, emerging markets could boom while the rest of the world crashes in the same simulated month. Keeping whole months together keeps the funds moving together the way they really do.
 
 Each simulated month then does two things: put in €200 (split as I described before), and grow everything by that month's returns. In code:
 
@@ -88,7 +88,7 @@ Why 3 months? It's a trade-off. Longer blocks keep more of the real streaks, but
 
 ## My first answer was too good
 
-My first version only used the ETFs' own price history. That sounds like the obvious choice: if I'm simulating these three funds, I should use what these three funds actually did. The catch is that a simulation can only use months where *all* the funds have data, so the youngest one decides where history starts. The emerging markets ETF only has prices from June 2014, so my history ran from July 2014 to October 2026: 148 months.
+My first version only used the ETFs' own price history. That sounds like the obvious choice: if I'm simulating these three funds, I should use what these three funds actually did. The catch is that a simulation can only use months where _all_ the funds have data, so the youngest one decides where history starts. The emerging markets ETF only has prices from June 2014, so my history ran from July 2014 to October 2026: 148 months.
 
 The result looked great. Out of 10,000 futures, the median ended at **about €43,700** from €24,000 put in, and only **0.9%** of them ended with less money than I'd put in. Less than one in a hundred. Investing sounded almost risk-free.
 
@@ -96,13 +96,13 @@ Then I plotted where those 148 months sit in a longer history:
 
 ![Growth of the 70/20/10 portfolio from 2005 to 2026 and its falls from the previous peak. The 2014–2026 window my first simulation used is shaded; the 2008–09 crash, a fall of 49%, sits outside it.](./ep-01/history-window.png)
 
-| | What my first run saw (2014–2026) | Full history (2005–2026) |
-| --- | --- | --- |
-| Months | 148 | 259 |
-| Average yearly growth | 11.4% | 9.1% |
-| Worst 12 months | −13.0% | −38.3% |
-| Biggest fall from a peak | −19.9% | −48.6% |
-| Longest time below a previous peak | 23 months | 64 months |
+|                                    | What my first run saw (2014–2026) | Full history (2005–2026) |
+| ---------------------------------- | --------------------------------- | ------------------------ |
+| Months                             | 148                               | 259                      |
+| Average yearly growth              | 11.4%                             | 9.1%                     |
+| Worst 12 months                    | −13.0%                            | −38.3%                   |
+| Biggest fall from a peak           | −19.9%                            | −48.6%                   |
+| Longest time below a previous peak | 23 months                         | 64 months                |
 
 The window wasn't crash-free. COVID knocked about 20% off the portfolio in early 2020, and it was back at its peak before the end of the year. The 2022 sell-off was shallower, around 13%, but took about two years to recover. What the window doesn't include is 2008: the portfolio lost almost half its value and spent more than five years, from late 2007 to early 2013, below its previous peak. My simulation could only build futures out of the pieces it had, and none of those pieces looked like a real, long crash. (The years before 2014 come from stand-in funds, since these ETFs didn't exist yet. More on that in the next section.)
 
@@ -110,15 +110,15 @@ That's the first lesson of this whole exercise: **a simulation built from histor
 
 ## Putting 2008 back in
 
-The fix was to stop waiting for the ETFs to exist. Before each ETF launched, I use the returns of an older fund that tracks the same kind of market, a *stand-in*. From the month the real ETF has prices, I switch to the ETF's own returns, so the two never overlap.
+The fix was to stop waiting for the ETFs to exist. Before each ETF launched, I use the returns of an older fund that tracks the same kind of market, a _stand-in_. From the month the real ETF has prices, I switch to the ETF's own returns, so the two never overlap.
 
 The stand-ins are US-listed funds that have been trading for much longer:
 
-| Fund | Real ETF data from | Stand-in before that | Stand-in months |
-| --- | --- | --- | --- |
-| MSCI World | October 2009 | 70% SPY (US S&P 500) + 30% EFA (developed markets outside North America) | 69 |
-| Emerging Markets IMI | July 2014 | EEM (MSCI Emerging Markets) | 126 |
-| MSCI Europe | November 2009 | VGK (FTSE Developed Europe) | 55 |
+| Fund                 | Real ETF data from | Stand-in before that                                                     | Stand-in months |
+| -------------------- | ------------------ | ------------------------------------------------------------------------ | --------------- |
+| MSCI World           | October 2009       | 70% SPY (US S&P 500) + 30% EFA (developed markets outside North America) | 69              |
+| Emerging Markets IMI | July 2014          | EEM (MSCI Emerging Markets)                                              | 126             |
+| MSCI Europe          | November 2009      | VGK (FTSE Developed Europe)                                              | 55              |
 
 They are priced in dollars, so every month I convert their returns to euros with that month's EUR/USD exchange rate. Otherwise a stronger or weaker dollar would show up as fake gains or losses.
 
@@ -128,13 +128,13 @@ The history now starts in April 2005, set by the youngest stand-in (VGK) this ti
 
 A stand-in is only useful if it behaves like the real thing. Luckily I can check that: for the years when both the ETF and its stand-in exist, I can compare them month by month.
 
-| Fund | Months to compare | Correlation | Yearly difference (ETF − stand-in) | Tracking error |
-| --- | --- | --- | --- | --- |
-| MSCI World | 205 | 0.96 | −1.2% | 3.6% |
-| Emerging Markets IMI | 148 | 0.97 | +0.5% | 3.5% |
-| MSCI Europe | 204 | 0.97 | −0.4% | 3.7% |
+| Fund                 | Months to compare | Correlation | Yearly difference (ETF − stand-in) | Tracking error |
+| -------------------- | ----------------- | ----------- | ---------------------------------- | -------------- |
+| MSCI World           | 205               | 0.96        | −1.2%                              | 3.6%           |
+| Emerging Markets IMI | 148               | 0.97        | +0.5%                              | 3.5%           |
+| MSCI Europe          | 204               | 0.97        | −0.4%                              | 3.7%           |
 
-*Correlation* measures how much they move together month to month: 1 means perfectly in step, 0 means unrelated. All three are around 0.96–0.97, so they go up and down together almost every month. The *yearly difference* is how much better or worse the real ETF did on average, and the *tracking error* is how much that difference wobbles from year to year.
+_Correlation_ measures how much they move together month to month: 1 means perfectly in step, 0 means unrelated. All three are around 0.96–0.97, so they go up and down together almost every month. The _yearly difference_ is how much better or worse the real ETF did on average, and the _tracking error_ is how much that difference wobbles from year to year.
 
 They're good, but not perfect, and it's worth being upfront about where they differ:
 
@@ -148,14 +148,14 @@ So this isn't the funds' real history. It's my best estimate of how they would h
 
 Here's the same simulation, the same portfolio and the same 10,000 futures, run on both histories:
 
-| | ETF-only history | With stand-ins |
-| --- | --- | --- |
-| History used | July 2014 – October 2026 | April 2005 – October 2026 |
-| Months | 148 | 259 |
-| Worst 5% of futures end below | €28,900 | €24,600 |
-| Median future | €43,700 | €39,100 |
-| Best 5% of futures end above | €64,100 | €60,500 |
-| Chance of ending below the €24,000 put in | **0.9%** | **4.1%** |
+|                                           | ETF-only history         | With stand-ins            |
+| ----------------------------------------- | ------------------------ | ------------------------- |
+| History used                              | July 2014 – October 2026 | April 2005 – October 2026 |
+| Months                                    | 148                      | 259                       |
+| Worst 5% of futures end below             | €28,900                  | €24,600                   |
+| Median future                             | €43,700                  | €39,100                   |
+| Best 5% of futures end above              | €64,100                  | €60,500                   |
+| Chance of ending below the €24,000 put in | **0.9%**                 | **4.1%**                  |
 
 Nothing changed except the past I gave the model. Yet the chance of ending up with less than I put in went from **less than 1 in 100 to about 1 in 25**, and the bad futures got noticeably worse: in the worst 5% of them, I'd end with €24,600 or less, roughly what I put in, instead of a comfortable €28,900.
 
@@ -165,14 +165,14 @@ That's the main point of this whole episode. The simulation itself didn't get sm
 
 With the longer history in place, here's the main result. Putting €200 a month into the portfolio for ten years means €24,000 in total. This is where the 10,000 simulated futures ended up:
 
-| Out of 10,000 futures… | Final value |
-| --- | --- |
-| 5% ended below | €24,600 |
-| 25% ended below | €32,400 |
-| Half ended below (the median) | €39,100 |
-| 25% ended above | €46,900 |
-| 5% ended above | €60,500 |
-| **Ended below the €24,000 put in** | **4.1%** |
+| Out of 10,000 futures…             | Final value |
+| ---------------------------------- | ----------- |
+| 5% ended below                     | €24,600     |
+| 25% ended below                    | €32,400     |
+| Half ended below (the median)      | €39,100     |
+| 25% ended above                    | €46,900     |
+| 5% ended above                     | €60,500     |
+| **Ended below the €24,000 put in** | **4.1%**    |
 
 So the typical future turns €24,000 into about €39,000, but "typical" hides a wide range: the middle 90% of futures land anywhere between €24,600 and €60,500. Same portfolio, same €200 a month, and the difference between a bad decade and a good one is more than the total I put in.
 
@@ -188,7 +188,7 @@ The further ahead you look, the wider the range of outcomes. The worst futures s
 
 Most futures end between €30,000 and €50,000, with a longer tail of lucky ones to the right: 18% end above €50,000, and four pass €100,000. On the other side, 4.1% end below the €24,000 put in, and the worst ends at about €12,600, half the money gone after ten years of saving.
 
-One catch: every euro here is a *future* euro, and €39,000 in 2036 won't buy what it buys today. That's the next thing to fix.
+One catch: every euro here is a _future_ euro, and €39,000 in 2036 won't buy what it buys today. That's the next thing to fix.
 
 ## A euro in 2036 isn't a euro today
 
@@ -200,31 +200,31 @@ The money I put in needs the same treatment, one payment at a time. The €200 I
 
 In today's money, the median future ends at **€32,100** instead of €39,100, and the chance of ending up with less purchasing power than I put in roughly doubles, from 4.1% to **8.5%**. And 2% is the optimistic case:
 
-| Inflation per year | Worst 5% end below | Median | Best 5% end above | Chance of losing purchasing power |
-| --- | --- | --- | --- | --- |
-| None | €24,600 | €39,100 | €60,500 | 4.1% |
-| 2% | €20,200 | €32,100 | €49,600 | 8.5% |
-| 3% | €18,300 | €29,100 | €45,000 | 11.7% |
-| 4% | €16,600 | €26,400 | €40,800 | 15.7% |
+| Inflation per year | Worst 5% end below | Median  | Best 5% end above | Chance of losing purchasing power |
+| ------------------ | ------------------ | ------- | ----------------- | --------------------------------- |
+| None               | €24,600            | €39,100 | €60,500           | 4.1%                              |
+| 2%                 | €20,200            | €32,100 | €49,600           | 8.5%                              |
+| 3%                 | €18,300            | €29,100 | €45,000           | 11.7%                             |
+| 4%                 | €16,600            | €26,400 | €40,800           | 15.7%                             |
 
 At 4% a year, roughly 1 in 6 futures ends up buying less than the money I saved would have bought on day one.
 
 ## Same returns, different order
 
-So far, every future has been a random shuffle of history. But how much does the *order* of the returns matter? To check, I took one real ten-year stretch of the portfolio's history, April 2005 to March 2015, and replayed exactly the same 120 monthly returns in four different orders, still adding €200 every month. That stretch contains the worst 12 months in the whole history: calendar year 2008, when the portfolio lost 38%.
+So far, every future has been a random shuffle of history. But how much does the _order_ of the returns matter? To check, I took one real ten-year stretch of the portfolio's history, April 2005 to March 2015, and replayed exactly the same 120 monthly returns in four different orders, still adding €200 every month. That stretch contains the worst 12 months in the whole history: calendar year 2008, when the portfolio lost 38%.
 
 ![Portfolio value over ten years when the same monthly returns from April 2005 to March 2015 are replayed in four orders: historical, reversed, with the worst 12 months (2008) moved to the start, and with them moved to the end. The final values range from about €29,000 to €50,500.](./ep-01/sequence-risk.png)
 
 | Order of the same returns | Final value |
-| --- | --- |
-| Worst 12 months first | €50,500 |
-| Historical order | €41,600 |
-| Reversed | €31,900 |
-| Worst 12 months last | €29,000 |
+| ------------------------- | ----------- |
+| Worst 12 months first     | €50,500     |
+| Historical order          | €41,600     |
+| Reversed                  | €31,900     |
+| Worst 12 months last      | €29,000     |
 
 Same returns, same €24,000 put in, and the result ranges from €29,000 to €50,500. The reason is the monthly contributions. A crash in the first year hits a portfolio that only holds a few thousand euros, and every €200 after it buys in cheap. The same crash in the last year hits the whole pot, with no time left to recover. Without contributions the order wouldn't matter at all: multiplying the same returns in a different order gives the same result.
 
-This is called *sequence risk*, and it's one more reason the spread of outcomes is so wide: two people with the same portfolio and the same average returns can end up in very different places just because of *when* the bad year arrives.
+This is called _sequence risk_, and it's one more reason the spread of outcomes is so wide: two people with the same portfolio and the same average returns can end up in very different places just because of _when_ the bad year arrives.
 
 ## The portfolio drifts on its own
 
@@ -240,21 +240,21 @@ A simulation like this looks precise, with numbers down to the euro, but it rest
 
 **What if the future is worse than the past?** I re-ran everything after cutting every historical return by a fixed amount per year:
 
-| Returns | Worst 5% end below | Median | Chance of ending below €24,000 |
-| --- | --- | --- | --- |
-| As in history | €24,600 | €39,100 | 4.1% |
-| 2% a year lower | €22,200 | €35,000 | 8.7% |
-| 4% a year lower | €20,100 | €31,400 | 16.1% |
+| Returns         | Worst 5% end below | Median  | Chance of ending below €24,000 |
+| --------------- | ------------------ | ------- | ------------------------------ |
+| As in history   | €24,600            | €39,100 | 4.1%                           |
+| 2% a year lower | €22,200            | €35,000 | 8.7%                           |
+| 4% a year lower | €20,100            | €31,400 | 16.1%                          |
 
 **What if the 3-month blocks hide something?** I promised to come back to this. Longer blocks keep more of the real streaks, like 2008, which fell for more than a year:
 
-| Block size | Worst 5% end below | Median | Chance of ending below €24,000 |
-| --- | --- | --- | --- |
-| 1 month | €25,100 | €38,900 | 3.5% |
-| 3 months (used in this post) | €24,600 | €39,100 | 4.1% |
-| 6 months | €23,700 | €39,000 | 5.4% |
-| 12 months | €22,700 | €38,200 | 7.0% |
-| 24 months | €22,200 | €38,300 | 7.5% |
+| Block size                   | Worst 5% end below | Median  | Chance of ending below €24,000 |
+| ---------------------------- | ------------------ | ------- | ------------------------------ |
+| 1 month                      | €25,100            | €38,900 | 3.5%                           |
+| 3 months (used in this post) | €24,600            | €39,100 | 4.1%                           |
+| 6 months                     | €23,700            | €39,000 | 5.4%                           |
+| 12 months                    | €22,700            | €38,200 | 7.0%                           |
+| 24 months                    | €22,200            | €38,300 | 7.5%                           |
 
 The median barely moves, but the bad futures get worse as the blocks get longer, and the chance of losing money almost doubles. So my 3-month choice probably makes things look a bit safer than they are.
 
