@@ -1,14 +1,13 @@
 ---
-import { getEpisodes, getSocialPosts } from '../lib/content';
+import { getEpisodes } from '../lib/content';
 import Wordmark from './Wordmark.astro';
 
 const path = Astro.url.pathname;
-const [episodes, social] = await Promise.all([getEpisodes(), getSocialPosts()]);
+const episodes = await getEpisodes();
 
 const tabs = [
 	{ label: 'Home', href: '/', active: path === '/', count: undefined },
 	{ label: 'Posts', href: '/posts/', active: path.startsWith('/posts'), count: episodes.length },
-	{ label: 'Social', href: '/social/', active: path.startsWith('/social'), count: social.length },
 ];
 ---
 

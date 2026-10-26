@@ -1,4 +1,4 @@
-import { defineCollection, reference } from 'astro:content';
+import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 import { TOPICS } from './consts';
@@ -25,16 +25,4 @@ const blog = defineCollection({
 	}),
 });
 
-// X and LinkedIn posts; the Markdown body is the post text, exactly as published.
-const social = defineCollection({
-	loader: glob({ base: './src/content/social', pattern: '**/*.md' }),
-	schema: z.object({
-		platform: z.enum(['x', 'linkedin']),
-		url: z.url(),
-		date: z.coerce.date(),
-		episode: reference('blog').optional(),
-		draft: z.boolean().default(false),
-	}),
-});
-
-export const collections = { blog, social };
+export const collections = { blog };
