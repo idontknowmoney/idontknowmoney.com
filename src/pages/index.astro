@@ -1,16 +1,14 @@
 ---
 import PostCard from '../components/PostCard.astro';
 import SectionHeader from '../components/SectionHeader.astro';
-import SocialCard from '../components/SocialCard.astro';
 import Wordmark from '../components/Wordmark.astro';
-import { SITE_DESCRIPTION, SITE_TITLE, SOCIAL } from '../consts';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { episodeHref, getEpisodes, getSocialPosts } from '../lib/content';
+import { episodeHref, getEpisodes } from '../lib/content';
 
 const episodes = await getEpisodes();
 const [latest, ...earlier] = episodes;
 const first = episodes.at(-1);
-const social = (await getSocialPosts()).slice(0, 2);
 ---
 
 <BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
@@ -27,59 +25,34 @@ const social = (await getSocialPosts()).slice(0, 2);
 						Start at Episode {String(first.data.episode).padStart(2, '0')}
 					</a>
 				)}
-				<a class="ik-btn" href={SOCIAL.x.url} target="_blank" rel="noopener">
-					Follow on X ↗
-				</a>
-				<a class="ik-btn" href={SOCIAL.linkedin.url} target="_blank" rel="noopener">
-					Follow on <span class="ik-li">LinkedIn</span> ↗
-				</a>
 			</div>
 		</section>
 
 		<section class="ik-section">
-			<div class="ik-grid-home">
-				<div>
-					<SectionHeader title="Latest episode" />
-					{latest ? (
-						<PostCard episode={latest} variant="featured" />
-					) : (
-						<div class="ik-empty">
-							<strong>No episodes yet</strong>
-							The first one is on its way.
-						</div>
-					)}
-					{earlier.length > 0 && (
-						<>
-							<SectionHeader
-								title="Earlier episodes"
-								href="/posts/"
-								linkLabel="All posts"
-								style="margin-top:48px"
-							/>
-							<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px">
-								{earlier.slice(0, 2).map((e) => (
-									<PostCard episode={e} />
-								))}
-							</div>
-						</>
-					)}
+			<SectionHeader title="Latest episode" />
+			{latest ? (
+				<PostCard episode={latest} variant="featured" />
+			) : (
+				<div class="ik-empty">
+					<strong>No episodes yet</strong>
+					The first one is on its way.
 				</div>
-				<div>
-					<SectionHeader title="From social" href="/social/" linkLabel="All" />
-					{social.length > 0 ? (
-						<div class="ik-stack">
-							{social.map((post) => (
-								<SocialCard {post} />
-							))}
-						</div>
-					) : (
-						<div class="ik-empty">
-							<strong>Nothing here yet</strong>
-							Posts from X and LinkedIn will show up here.
-						</div>
-					)}
-				</div>
-			</div>
+			)}
+			{earlier.length > 0 && (
+				<>
+					<SectionHeader
+						title="Earlier episodes"
+						href="/posts/"
+						linkLabel="All posts"
+						style="margin-top:48px"
+					/>
+					<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px">
+						{earlier.slice(0, 2).map((e) => (
+							<PostCard episode={e} />
+						))}
+					</div>
+				</>
+			)}
 		</section>
 	</div>
 </BaseLayout>

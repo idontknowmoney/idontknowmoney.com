@@ -2,21 +2,20 @@
 
 A minimalist developer blog about learning finance by building things, built with [Astro](https://astro.build) and styled with the _I Don't Know Money (Yet)_ design system (a white façade, mounted panels, one teal accent).
 
-Three tabs: **Home**, **Posts** (every episode, filterable by topic) and **Social** (X and LinkedIn posts that link out).
+Two tabs: **Home** and **Posts** (every episode, filterable by topic).
 
 ## Project structure
 
 ```text
 ├── public/                 favicons, og-image
-├── templates/              episode.md, social.md (copy into src/content/)
+├── templates/              episode.md (copy into src/content/)
 ├── src/
-│   ├── components/         SiteHeader, PostCard, SocialCard, FilterBar, ...
+│   ├── components/         SiteHeader, PostCard, FilterBar, ...
 │   ├── content/
-│   │   ├── blog/           episodes (Markdown/MDX), CC BY 4.0
-│   │   └── social/         X and LinkedIn posts (Markdown, body = post text)
+│   │   └── blog/           episodes (Markdown/MDX), CC BY 4.0
 │   ├── layouts/            BaseLayout, EpisodeLayout
 │   ├── lib/content.ts      collection helpers, date and episode formatting
-│   ├── pages/              /, /posts, /posts/<episode>, /social, /rss.xml
+│   ├── pages/              /, /posts, /posts/<episode>, /rss.xml
 │   └── styles/             tokens.css, ik.css (design system), global.css
 └── astro.config.mjs        fonts (Instrument Sans, JetBrains Mono)
 ```
@@ -24,8 +23,7 @@ Three tabs: **Home**, **Posts** (every episode, filterable by topic) and **Socia
 ### Writing content
 
 - An episode is `src/content/blog/ep-NN-slug.md` with `title`, `description`, `pubDate`, `episode`, `season`, `topic` and optional `code`, `takeaway`, `minutes`, `draft`.
-- A social post is `src/content/social/<date>-<platform>-<slug>.md` with `platform`, `url`, `date` and optionally `episode`; the body is the post text, exactly as published.
-- Start from the templates in [`templates/`](templates/): `episode.md` and `social.md` (each field is explained in comments). They live outside `src/content/` so they are never published.
+- Start from the template in [`templates/`](templates/): `episode.md` (each field is explained in comments). It lives outside `src/content/` so it is never published.
 - Entries with `draft: true` show in `pnpm dev` and are left out of production builds. The seed content is all drafts: replace it with real episodes.
 
 ## Commands

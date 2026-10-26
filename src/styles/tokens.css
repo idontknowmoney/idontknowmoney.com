@@ -16,7 +16,6 @@
 	--accent: #0d6e6e;
 	--accent-soft: #ddf0ef;
 	--on-accent: #ffffff;
-	--linkedin: #0a66c2;
 	--link: var(--accent);
 	--focus: var(--accent);
 	--shadow-panel: 0 1px 2px rgba(27, 27, 25, 0.05);
@@ -38,7 +37,6 @@
 	--accent: #4fd1c5;
 	--accent-soft: #0b2827;
 	--on-accent: #151618;
-	--linkedin: #71b7fb;
 	--shadow-panel: 0 1px 2px rgba(0, 0, 0, 0.45);
 	--shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.5), 0 12px 32px rgba(0, 0, 0, 0.45);
 }

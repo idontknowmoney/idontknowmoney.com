@@ -4,14 +4,7 @@ export const SITE_DESCRIPTION =
 export const AUTHOR = 'Àlex Rodríguez';
 export const AUTHOR_INITIALS = 'AR';
 
-export const SOCIAL = {
-	x: { url: 'https://x.com/alexrr04', handle: '@alexrr04' },
-	linkedin: {
-		url: 'https://www.linkedin.com/in/alex-rodriguez-rodriguez/',
-		handle: 'Data Scientist · learning finance',
-	},
-	github: 'https://github.com/idontknowmoney',
-} as const;
+export const GITHUB_URL = 'https://github.com/idontknowmoney';
 
 export const TOPICS = ['Meta', 'Simulation', 'Portfolio', 'Data', 'Pipeline', 'Valuation'] as const;
 

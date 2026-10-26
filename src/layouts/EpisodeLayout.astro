@@ -1,26 +1,16 @@
 ---
 import { AUTHOR, AUTHOR_INITIALS, SEASONS } from '../consts';
-import SectionHeader from '../components/SectionHeader.astro';
-import SocialCard from '../components/SocialCard.astro';
 import Tag from '../components/Tag.astro';
-import {
-	epLabel,
-	episodeHref,
-	formatDate,
-	readingTime,
-	type Episode,
-	type SocialPost,
-} from '../lib/content';
+import { epLabel, episodeHref, formatDate, readingTime, type Episode } from '../lib/content';
 import BaseLayout from './BaseLayout.astro';
 
 interface Props {
 	episode: Episode;
 	previous?: Episode;
 	next?: Episode;
-	social: SocialPost[];
 }
 
-const { episode, previous, next, social } = Astro.props;
+const { episode, previous, next } = Astro.props;
 const { title, description, pubDate, updatedDate, topic, season, code, takeaway, minutes } =
 	episode.data;
 const mins = minutes ?? readingTime(episode.body);
@@ -84,17 +74,6 @@ const mins = minutes ?? readingTime(episode.body);
 				repo.
 			</p>
 		</div>
-
-		{social.length > 0 && (
-			<section class="ik-discuss">
-				<SectionHeader title="Discussed on social" />
-				<div class="ik-grid-2">
-					{social.map((post) => (
-						<SocialCard {post} />
-					))}
-				</div>
-			</section>
-		)}
 
 		<nav class="ik-pager" aria-label="Episodes">
 			{previous ? (
