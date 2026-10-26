@@ -1,11 +1,10 @@
 ---
 import { render } from 'astro:content';
 import EpisodeLayout from '../../layouts/EpisodeLayout.astro';
-import { getEpisodes, getSocialPosts } from '../../lib/content';
+import { getEpisodes } from '../../lib/content';
 
 export async function getStaticPaths() {
 	const episodes = await getEpisodes();
-	const social = await getSocialPosts();
 	// `episodes` is newest first, so the next index is the previous episode.
 	return episodes.map((episode, i) => ({
 		params: { slug: episode.id },
@@ -13,15 +12,14 @@ export async function getStaticPaths() {
 			episode,
 			previous: episodes[i + 1],
 			next: episodes[i - 1],
-			social: social.filter((post) => post.data.episode?.id === episode.id),
 		},
 	}));
 }
 
-const { episode, previous, next, social } = Astro.props;
+const { episode, previous, next } = Astro.props;
 const { Content } = await render(episode);
 ---
 
-<EpisodeLayout {episode} {previous} {next} {social}>
+<EpisodeLayout {episode} {previous} {next}>
 	<Content />
 </EpisodeLayout>
